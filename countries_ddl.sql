@@ -1,6 +1,6 @@
 -- this would be the DDL for the database. I used it as a reference for the sqlalchemy models
 -- This has really no use
-CREATE DATABASE vemo_db;
+CREATE DATABASE challenge_db;
 
 CREATE TABLE countries (
     id SERIAL PRIMARY KEY,

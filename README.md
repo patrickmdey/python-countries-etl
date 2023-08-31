@@ -19,11 +19,16 @@ los países del mundo.
    electrónico diario con el archivo Excel adjunto.
 
 ## Configuración y uso
+En todo momento se asume que se está ejecutando en un entorno de trabajo Linux
 
-1.  Asegurarse de tener instalado en el ambiente una base de datos `postgres (PostgreSQL) 14.8` o superior con una base de datos creada (utilizar el mismo nombre en la configuración del `.env` que se menciona mas adelante)
-2.  Asegurarse de tener instalado `Python 3.11.4` o superior junto a la versión de pip correspondiente.<br>Es recomendable generar un _virtual environment_ para aislar las dependencias del proyecto. Esto puede realizarse ejecutando el siguiente comando
+1.  Asegurarse de tener instalado en el ambiente una base de datos `postgres (PostgreSQL) 14.8` o superior con una base de datos creada (utilizar el mismo nombre en la configuración del `.env` que se menciona mas adelante). Puede hacerlo ejecutando el siguiente comando en la terminal
+   ```bash
+      $> postgresql --version
+   ```
+3.  Asegurarse de tener instalado `Python 3.11.4` o superior junto a la versión de pip correspondiente.<br>Es recomendable generar un _virtual environment_ para aislar las dependencias del proyecto. Esto puede realizarse ejecutando el siguiente comando
 
     ```sh
+        $> python3 --version
         $> python3 -m venv .venv
     ```
 
@@ -33,13 +38,13 @@ los países del mundo.
         $> source .venv/bin/activate
     ```
 
-3.  Ahora descargaremos las dependencias necearias para el correcto funcionamiento del proyecto. Esto lo hacemos ejecutando
+5.  Ahora descargaremos las dependencias necearias para el correcto funcionamiento del proyecto. Esto lo hacemos ejecutando
 
     ```sh
         $> pip3 install -r requirements.txt
     ```
 
-4.  Para reducir al máximo la modificación del código, el proyecto necesita de dos archivos de configuración
+6.  Para reducir al máximo la modificación del código, el proyecto necesita de dos archivos de configuración
 
     El primero es el que cuenta con las variables de entorno: `.env`. Este archivo tambien es importante ya que contiene las credenciales para enviar los mails y de estar harcodeados en el codigo sería inseguro.<br> A modo de ejemplo:
 
@@ -63,11 +68,11 @@ los países del mundo.
     }
     ```
 
-5.  Una vez tenemos todo configurado, podemos ejectuar el proceso ETL que se conecta a la base de datos utilizando las variables de entorno, hace el request a la API, transforma los datos como los necesitamos y los guarda en la base de datos. Finalmente calcula las métricas y genera el archivo excel. Esto lo hacemos ejecutando el siguiente comando
+7.  Una vez tenemos todo configurado, podemos ejectuar el proceso ETL que se conecta a la base de datos utilizando las variables de entorno, hace el request a la API, transforma los datos como los necesitamos y los guarda en la base de datos. Finalmente calcula las métricas y genera el archivo excel. Esto lo hacemos ejecutando el siguiente comando
     ```bash
         $> python3 run_etl.py
     ```
-6.  Por último, como queremos que se envie un mail con el archivo de métricas todos los dias, debemos configurar el entorno para que lo haga. Decidi utilizar la funcionalidad de linux `crontab` que permite ejecutar un comando todas las veces que se cumpla una condición. En este caso que se mande el mail todos los dias a las 8am. Esto puede hacerse ejecutando los siguientes comandos
+8.  Por último, como queremos que se envie un mail con el archivo de métricas todos los dias, debemos configurar el entorno para que lo haga. Decidi utilizar la funcionalidad de linux `crontab` que permite ejecutar un comando todas las veces que se cumpla una condición. En este caso que se mande el mail todos los dias a las 8am. Esto puede hacerse ejecutando los siguientes comandos
     ```bash
         $> chmod +x add_crontab_config.sh
         $> ./add_crontab_config.sh

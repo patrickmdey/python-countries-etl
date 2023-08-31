@@ -1,6 +1,7 @@
 import pandas as pd
 import dotenv
 import os
+import sys
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -60,14 +61,17 @@ def send_email(email_sender: EmailSender,recipients_list, subject, body, attachm
         
         server.close()
 
-def run_daily_email(excel_already_created=False, excel_path="countries.xlsx"):
+def run_daily_email(excel_already_created=False, excel_path="countries.xlsx", total_path=None):
     """Receive the email configuration from the email_config.json file and sends the email
         it creates the countries.xlsx file form the database in case it gets updated
     """
-    if not os.path.exists("email_config.json"):
+    email_path = total_path + "/email_config.json"
+    excel_path = total_path + "/countries.xlsx"
+
+    if not os.path.exists(email_path):
         print("Error: email_config.json file not found")
         exit(0)
-    with open("email_config.json", "r") as config_f:
+    with open(email_path, "r") as config_f:
         config = json.load(config_f)
         recipient_email = config["recipient"]
         subject = config["subject"]
@@ -77,7 +81,7 @@ def run_daily_email(excel_already_created=False, excel_path="countries.xlsx"):
             print("Error: email_usr, email_pass or email_server is None")
             exit(0)
 
-        dotenv.load_dotenv()
+        dotenv.load_dotenv(total_path + "/.env")
         postgresql_url = os.getenv("POSTGRESQL_URL")
         try:
             if not excel_already_created:
@@ -103,5 +107,7 @@ def run_daily_email(excel_already_created=False, excel_path="countries.xlsx"):
     config_f.close()
 
 if __name__ == "__main__":
-    run_daily_email()
+    total_path = sys.argv[1] if len(sys.argv) > 1 else None
+
+    run_daily_email(total_path=total_path)
     

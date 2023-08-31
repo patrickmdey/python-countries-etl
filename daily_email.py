@@ -33,29 +33,32 @@ def send_email(email_sender: EmailSender,recipients_list, subject, body, attachm
         attachment_path (str, optional): Path of the file to attach
     """
 
-    """Sets the email parts"""
-    message = MIMEMultipart()
-    message['From'] = email_sender.email
-    message['Subject'] = subject
-    message.attach(MIMEText(body, 'plain'))
-    wb = openpyxl.load_workbook(attachment_path)
+    for recipient_email in recipients_list:
+        """Sets the email parts"""
+        message = MIMEMultipart()
+        message['From'] = email_sender.email
+        message['To'] = recipient_email
+        message['Subject'] = subject
+        message.attach(MIMEText(body, 'plain'))
 
-    """Attatch the file to the email"""
-    attachment = MIMEApplication(open(attachment_path, 'rb').read())
-    attachment.add_header('Content-Disposition', 'attachment', filename=attachment_path)
-    message.attach(attachment)
+        wb = openpyxl.load_workbook(attachment_path)
 
-    try:
+        """attatch the file to the email"""""
+        attachment = MIMEApplication(open(attachment_path, 'rb').read())
+        attachment.add_header('Content-Disposition', 'attachment', filename=attachment_path)
+        message.attach(attachment)
+
+        """ connects and sends the email to the recipients"""
         with smtplib.SMTP(email_sender.server, email_sender.SMTP_PORT) as server:
-            server.starttls()
-            server.login(email_sender.email, email_sender.password)
-
-            for recipient_email in recipients_list:
-                message['To'] = recipient_email 
-                # Connect to the SMTP server and send the email
+            try:
+                server.starttls()
+                server.login(email_sender.email, email_sender.password)
                 server.sendmail(email_sender.email, recipient_email, message.as_string())
-    except Exception as e:
-        print("Error: Couldn't send the email. Check the email credentials")
+            except:
+                print(f"Error: Couldn't send email to {recipient_email}. Check the email_server in the .env file")
+                exit(0)
+        
+        server.close()
 
 def run_daily_email(excel_already_created=False, excel_path="countries.xlsx"):
     """Receive the email configuration from the email_config.json file and sends the email

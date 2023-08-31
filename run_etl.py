@@ -27,12 +27,11 @@ class Country(Base):
     capitals: Mapped[str] = mapped_column(nullable=False)
 
 # Creates all tables in the database if they don't already exist
-def create_tables(engine):
+def create_tables(db_connection):
     """Creates the postgresql tables if they don't exist
     Args:
         engine (sqlalchemy.engine.base.Engine): The sqlalchemy engine
     """
-    db_connection = engine.connect()
     if not engine.dialect.has_table(db_connection, "countries"):
         print("Creating tables...")
         """Using sqlalchemy to create the tables. 
@@ -116,7 +115,14 @@ if __name__ == "__main__":
     df = api_to_df(response.json())
     
     engine = create_engine(postgresql_url)
-    create_tables(engine)
+    try:
+        db_connection = engine.connect()
+    except:
+        print("Error: Couldn't connect to the database. Check the postgresql_url in the .env file")
+        exit(0)
+    
+
+    create_tables(db_connection)
     fill_database(engine, df)
     create_excel_file(df)
     run_daily_email(excel_already_created=True)

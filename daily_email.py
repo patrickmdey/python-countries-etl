@@ -76,9 +76,13 @@ def run_daily_email(excel_already_created=False, excel_path="countries.xlsx"):
 
         dotenv.load_dotenv()
         postgresql_url = os.getenv("POSTGRESQL_URL")
-        if not excel_already_created:
-            countries_df = pd.read_sql_table("countries", postgresql_url)
-            create_excel_file(countries_df, excel_path)
+        try:
+            if not excel_already_created:
+                countries_df = pd.read_sql_table("countries", postgresql_url)
+                create_excel_file(countries_df, excel_path)
+        except:
+            print("Error: Couldn't connect to the database. Check the postgresql_url in the .env file")
+            exit(0)
 
         """Receives the email sender credentials from the .env file"""
         email_usr = os.getenv("EMAIL_USR")

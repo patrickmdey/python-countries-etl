@@ -170,7 +170,7 @@ Finalmente, continents viene en una lista por lo que tambien puede ocurrir que n
 
 ## Import de la API a postgreSQL
 
-A modo de guía esta subido el archivo vemo_ddl.sql que contiene el comando para la creación de las tabla en la base de datos para enteder bien cómo almaceno los datos.
+A modo de guía esta subido el archivo countries_ddl.sql que contiene el comando para la creación de las tabla en la base de datos para enteder bien cómo almaceno los datos.
 
 En los casos que los valores no son únicos, por ejemplo lenguajes, los almaceno concatenando los distintos strings separandolos con una coma.
 Si bien no es la manera convencional de hacerlo (debería crear distintas tablas que representen tanto los modelos como las relaciones), para mantener la simplicidad del ejercicio.

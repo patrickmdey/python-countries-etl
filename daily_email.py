@@ -65,8 +65,9 @@ def run_daily_email(excel_already_created=False, excel_path="countries.xlsx", to
     """Receive the email configuration from the email_config.json file and sends the email
         it creates the countries.xlsx file form the database in case it gets updated
     """
-    email_path = total_path + "/email_config.json"
-    excel_path = total_path + "/countries.xlsx"
+    total_path = "" if total_path is None else total_path
+    email_path = total_path + "email_config.json"
+    excel_path = total_path + "countries.xlsx"
 
     if not os.path.exists(email_path):
         print("Error: email_config.json file not found")
@@ -107,7 +108,7 @@ def run_daily_email(excel_already_created=False, excel_path="countries.xlsx", to
     config_f.close()
 
 if __name__ == "__main__":
-    total_path = sys.argv[1] if len(sys.argv) > 1 else None
+    total_path = sys.argv[1] + "/" if len(sys.argv) > 1 else None
 
     run_daily_email(total_path=total_path)
     

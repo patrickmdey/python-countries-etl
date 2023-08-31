@@ -76,13 +76,16 @@ En todo momento se asume que se está ejecutando en un entorno de trabajo Linux
         $> python3 run_etl.py
     ```
 6.  Por último, como queremos que se envie un mail con el archivo de métricas todos los dias, debemos configurar el entorno para que lo haga. Decidi utilizar la funcionalidad de linux `crontab` que permite ejecutar un comando todas las veces que se cumpla una condición. En este caso que se mande el mail todos los dias a las 8am. Esto puede hacerse ejecutando los siguientes comandos
+
     ```bash
         $> chmod +x add_crontab_config.sh
         $> ./add_crontab_config.sh
     ```
+
     Es posible que haya que darle permisos crontab para que pueda acceder a los archivos dentro de .venv
 
     Para que el job deje de enviar emails basta con ejecutar el siguiente comando
+
     ```bash
         $> crontab -r
     ```
@@ -170,6 +173,16 @@ Finalmente, continents viene en una lista por lo que tambien puede ocurrir que n
 A modo de guía esta subido el archivo vemo_ddl.sql que contiene el comando para la creación de las tabla en la base de datos para enteder bien cómo almaceno los datos.
 
 En los casos que los valores no son únicos, por ejemplo lenguajes, los almaceno concatenando los distintos strings separandolos con una coma.
-Si bien no es la manera convencional de hacerlo (debería crear distintas tablas que representen tanto los modelos como las relaciones), para mantener la simplicidad del ejercicio
+Si bien no es la manera convencional de hacerlo (debería crear distintas tablas que representen tanto los modelos como las relaciones), para mantener la simplicidad del ejercicio.
 
-En todos los casos, pasé a minúscula todos los datos recibidos para tener consistencia en todas las entradas
+En todos los casos, pasé a minúscula todos los datos recibidos para tener consistencia en todas las entradas.
+
+## Métricas calculadas
+
+1. **Población por continente**: cantidad de personas que viven en cada continente
+2. **Lenguas más habladas**: cantidad de personas que habla cada idioma (devuelve los 10 primeros)
+3. **Monedas más utilizadas**: Monedas más utilizadas según la cantidad de paises que las utilizan (devuelve las 10 primeras). Esta tiene:
+    - Gráfico de barras
+    - Tabla de datos
+4. **Gráfico de torta que muestra la distribución de la población segun continente**
+5. **Gráfico de barras de lenguas mas habladas**: devuelve las 5 lenguas mas habladas en función de la cantidad de paises que las hablan

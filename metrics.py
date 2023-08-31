@@ -46,6 +46,8 @@ def plot_languages_by_country(df):
 
 def plot_pie_population_by_continent(df):
     plt.clf()
+    df = df[df["continents"] != ""]
+    df = df[df["continents"].str.contains(",") == False]
     plt.pie(df.groupby("continents").sum()["population"], 
             labels=df.groupby("continents").sum()["population"].index, autopct='%1.1f%%')
     plt.title("Población por continente")

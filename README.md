@@ -1,4 +1,49 @@
-## Python Challenge Pasante
+### Python Challenge Pasante
+
+## Configuración
+
+1.  Asegurarse de tener instalado en el ambiente una base de datos `postgres (PostgreSQL) 14.8` o superior con una base de datos creada
+2.  Asegurarse de tener instalado `Python 3.11.4`o superior junto a la versión de pip correspondiente.<br>Es recomendable generar un _virtual environment_ para aislar las dependencias del proyecto. Esto puede realizarse ejecutando el siguiente comando
+
+    ```sh
+        python -m venv .
+    ```
+
+    Luego, podemos acceder al mismo ejecutando el comando
+
+    ```sh
+        source .venv/bin/activate
+    ```
+
+3.  Ahora descargaremos las dependencias necearias para el correcto funcionamiento del proyecto. Esto lo hacemos ejecutando
+
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+4.  Para reducir al máximo la modificación del código, el proyecto necesita de dos archivos de configuración
+
+    El primero es el que cuenta con las variables de entorno: `.env`. A modo de ejemplo:
+
+    ````
+    POSTGRESQL_USR=postgres
+    POSTGRESQL_PASS=postgres
+    POSTGRESQL_URL=postgresql://postgres:postgres@127.0.0.1:5432/challenge_db
+    API_URL=https://restcountries.com/v3.1/all
+    EMAIL_SERVER=smtp.gmail.com
+    EMAIL_USR=usr@gmail.com
+    EMAIL_PASS=1234```
+    ````
+
+    El segundo archivo de configuración contiene la información necesaria para enviar el mail. Este debe llamarse `email_config.json` y tiene el siguiente formato:
+
+    ```json
+    {
+    	"recipient": "recip@gmail.com",
+    	"subject": "metricas diarias",
+    	"body": "Metricas de los paises"
+    }
+    ```
 
 ## Pasos realizados durante la realización del ejercicio
 
@@ -80,13 +125,11 @@ Population siempre viene un int por lo que lo tomo como viene
 
 Finalmente, continents viene en una lista por lo que tambien puede ocurrir que no solo sea un continente. Las concateno con un string.
 
-
-
 ### 2. Import de la API a postgreSQL
 
 A modo de guía esta subido el archivo vemo_ddl.sql que contiene el comando para la creación de las tabla en la base de datos para enteder bien cómo almaceno los datos.
 
 En los casos que los valores no son únicos, por ejemplo lenguajes, los almaceno concatenando los distintos strings separandolos con una coma.
-Si bien no es la manera convencional de hacerlo (debería crear distintas tablas que representen tanto los modelos como las relaciones), para mantener la simplicidad del ejercicio 
+Si bien no es la manera convencional de hacerlo (debería crear distintas tablas que representen tanto los modelos como las relaciones), para mantener la simplicidad del ejercicio
 
 En todos los casos, pasé a minúscula todos los datos recibidos para tener consistencia en todas las entradas

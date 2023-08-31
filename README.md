@@ -1,9 +1,27 @@
-### Python Challenge Pasante
+# Countries ETL Process with emails
 
-## Configuración
+Objetivo: Desarrollar una herramienta ETL (Extract, Transform, Load) para mostrar información sobre
+los países del mundo.
+
+1. Configurar el entorno necesario para un proyecto en Python.
+2. Usar SQLAlchemy, o cualquier ORM de tu preferencia, para establecer una interacción con una
+   base de datos relacional.
+3. Crear una base de datos destinada a almacenar la información de los países. Se debe definir un
+   modelo de datos que incluya los siguientes campos: Nombre, Capital, Moneda, Continente,
+   Lenguaje, Población y Bandera.
+4. Recopilar datos sobre los países de la API disponible en https://restcountries.com/v3.1/all.
+5. Realizar la transformación necesaria de los datos obtenidos para producir un archivo de salida en
+   formato Excel (.xlsx) con las siguientes características:
+   A. Una hoja llamada "Paises" que liste todos los países con los campos mencionados.
+   B. Una hoja llamada "Metricas" con gráficos y/o KPIs que consideres relevantes.
+
+6. Cargar la lista de países en la base de datos creada y configurar un sistema que envíe un correo
+   electrónico diario con el archivo Excel adjunto.
+
+## Configuración y uso
 
 1.  Asegurarse de tener instalado en el ambiente una base de datos `postgres (PostgreSQL) 14.8` o superior con una base de datos creada
-2.  Asegurarse de tener instalado `Python 3.11.4`o superior junto a la versión de pip correspondiente.<br>Es recomendable generar un _virtual environment_ para aislar las dependencias del proyecto. Esto puede realizarse ejecutando el siguiente comando
+2.  Asegurarse de tener instalado `Python 3.11.4` o superior junto a la versión de pip correspondiente.<br>Es recomendable generar un _virtual environment_ para aislar las dependencias del proyecto. Esto puede realizarse ejecutando el siguiente comando
 
     ```sh
         $> python3 -m venv .venv
@@ -18,12 +36,12 @@
 3.  Ahora descargaremos las dependencias necearias para el correcto funcionamiento del proyecto. Esto lo hacemos ejecutando
 
     ```sh
-        $>pip3 install -r requirements.txt
+        $> pip3 install -r requirements.txt
     ```
 
 4.  Para reducir al máximo la modificación del código, el proyecto necesita de dos archivos de configuración
 
-    El primero es el que cuenta con las variables de entorno: `.env`. A modo de ejemplo:
+    El primero es el que cuenta con las variables de entorno: `.env`. Este archivo tambien es importante ya que contiene las credenciales para enviar los mails y de estar harcodeados en el codigo sería inseguro.<br> A modo de ejemplo:
 
     ```
     POSTGRESQL_USR=postgres
@@ -55,9 +73,7 @@
         $> ./add_crontab_config.sh
     ```
 
-## Pasos realizados durante la realización del ejercicio
-
-### 1. Análisis del dataset
+## Análisis del dataset
 
 Realicé un get a la API de paises y analicé cuales eran las keys del dataset y que valores contenían (especificamente, los campos que requiere el challenge)<br>
 Por ejemplo, los campos de interes tienen este formato:
@@ -135,7 +151,7 @@ Population siempre viene un int por lo que lo tomo como viene
 
 Finalmente, continents viene en una lista por lo que tambien puede ocurrir que no solo sea un continente. Las concateno con un string.
 
-### 2. Import de la API a postgreSQL
+## Import de la API a postgreSQL
 
 A modo de guía esta subido el archivo vemo_ddl.sql que contiene el comando para la creación de las tabla en la base de datos para enteder bien cómo almaceno los datos.
 

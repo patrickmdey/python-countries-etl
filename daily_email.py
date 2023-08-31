@@ -22,39 +22,41 @@ class EmailSender:
         self.password = email_pass
         self.server = email_server
 
-def send_email(email_sender: EmailSender,recipient_email:str, subject:str, body:str, attachment_path=None):
-    """Sends an email with the given parameters
+def send_email(email_sender: EmailSender,recipients_list, subject, body, attachment_path=None):
+    """Creates an email that has the countries.xlsx file attached and sends it to the recipients
     Args:
         email_sender (EmailSender): EmailSender object with the email sender credentials
-        recipient_email (str): Email address of the recipient
-        subject (str): Subject of the email
-        body (str): Body of the email
-        attachment_path (str, optional): Path of the file to attach. Defaults to None.
+        recipient_email (list of str): Email addresses of the recipients
+        subject (str): Email subject
+        body (str): Email body
+        attachment_path (str, optional): Path of the file to attach
     """
 
+    """Sets the email parts"""
     message = MIMEMultipart()
     message['From'] = email_sender.email
-    message['To'] = recipient_email
     message['Subject'] = subject
     message.attach(MIMEText(body, 'plain'))
-
-    # Load Excel file
     wb = openpyxl.load_workbook(attachment_path)
 
-    # Create MIME application for the Excel file attachment
+    """Attatch the file to the email"""
     attachment = MIMEApplication(open(attachment_path, 'rb').read())
     attachment.add_header('Content-Disposition', 'attachment', filename=attachment_path)
     message.attach(attachment)
 
-    # Connect to the SMTP server and send the email
     with smtplib.SMTP(email_sender.server, email_sender.SMTP_PORT) as server:
         server.starttls()
         server.login(email_sender.email, email_sender.password)
-        server.sendmail(email_sender.email, recipient_email, message.as_string())
+
+        for recipient_email in recipients_list:
+            message['To'] = recipient_email 
+            # Connect to the SMTP server and send the email
+            server.sendmail(email_sender.email, recipient_email, message.as_string())
 
 if __name__ == "__main__":
-
-    """Receive the email configuration from the email_config.json file"""
+    """Receive the email configuration from the email_config.json file and sends the email
+        it creates the countries.xlsx file form the database in case it gets updated
+    """
     if not os.path.exists("email_config.json"):
         print("Error: email_config.json file not found")
         exit(0)

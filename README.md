@@ -6,43 +6,53 @@
 2.  Asegurarse de tener instalado `Python 3.11.4`o superior junto a la versión de pip correspondiente.<br>Es recomendable generar un _virtual environment_ para aislar las dependencias del proyecto. Esto puede realizarse ejecutando el siguiente comando
 
     ```sh
-        python -m venv .
+        $> python3 -m venv .venv
     ```
 
     Luego, podemos acceder al mismo ejecutando el comando
 
     ```sh
-        source .venv/bin/activate
+        $> source .venv/bin/activate
     ```
 
 3.  Ahora descargaremos las dependencias necearias para el correcto funcionamiento del proyecto. Esto lo hacemos ejecutando
 
     ```sh
-    pip install -r requirements.txt
+        $>pip3 install -r requirements.txt
     ```
 
 4.  Para reducir al máximo la modificación del código, el proyecto necesita de dos archivos de configuración
 
     El primero es el que cuenta con las variables de entorno: `.env`. A modo de ejemplo:
 
-    ````
+    ```
     POSTGRESQL_USR=postgres
     POSTGRESQL_PASS=postgres
     POSTGRESQL_URL=postgresql://postgres:postgres@127.0.0.1:5432/challenge_db
     API_URL=https://restcountries.com/v3.1/all
     EMAIL_SERVER=smtp.gmail.com
     EMAIL_USR=usr@gmail.com
-    EMAIL_PASS=1234```
-    ````
+    EMAIL_PASS=1234
+    ```
 
     El segundo archivo de configuración contiene la información necesaria para enviar el mail. Este debe llamarse `email_config.json` y tiene el siguiente formato:
 
     ```json
     {
-    	"recipient": "recip@gmail.com",
+    	"recipient": ["recip1@gmail.com", "recip2@gmail.com"],
     	"subject": "metricas diarias",
     	"body": "Metricas de los paises"
     }
+    ```
+
+5.  Una vez tenemos todo configurado, podemos ejectuar el proceso ETL que se conecta a la base de datos utilizando las variables de entorno, hace el request a la API, transforma los datos como los necesitamos y los guarda en la base de datos. Finalmente calcula las métricas y genera el archivo excel. Esto lo hacemos ejecutando el siguiente comando
+    ```bash
+        $> python3 run_etl.py
+    ```
+6.  Por último, como queremos que se envie un mail con el archivo de métricas todos los dias, debemos configurar el entorno para que lo haga. Decidi utilizar la funcionalidad de linux `crontab` que permite ejecutar un comando todas las veces que se cumpla una condición. En este caso que se mande el mail todos los dias a las 8am. Esto puede hacerse ejecutando los siguientes comandos
+    ```bash
+        $> chmod +x add_crontab_config.sh
+        $> ./add_crontab_config.sh
     ```
 
 ## Pasos realizados durante la realización del ejercicio

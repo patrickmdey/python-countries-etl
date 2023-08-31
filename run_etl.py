@@ -9,6 +9,7 @@ from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from metrics import *
+from daily_email import run_daily_email
 
 class Base(DeclarativeBase):
     pass
@@ -116,12 +117,7 @@ if __name__ == "__main__":
     
     engine = create_engine(postgresql_url)
     create_tables(engine)
-
-    #TODO: Check if the data is already in the database
     fill_database(engine, df)
-
-    calculate_metrics(df)
-
-    """Writes the rows that were inserted into the database into an excel file"""
-    df.to_excel("countries.xlsx", sheet_name="Paises", index=False)
+    create_excel_file(df)
+    run_daily_email(excel_already_created=True)
 

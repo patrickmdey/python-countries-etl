@@ -7,6 +7,7 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 import openpyxl
 import json
+from metrics import create_excel_file
 
 class EmailSender:
     """Class that contains the email sender credentials
@@ -44,16 +45,19 @@ def send_email(email_sender: EmailSender,recipients_list, subject, body, attachm
     attachment.add_header('Content-Disposition', 'attachment', filename=attachment_path)
     message.attach(attachment)
 
-    with smtplib.SMTP(email_sender.server, email_sender.SMTP_PORT) as server:
-        server.starttls()
-        server.login(email_sender.email, email_sender.password)
+    try:
+        with smtplib.SMTP(email_sender.server, email_sender.SMTP_PORT) as server:
+            server.starttls()
+            server.login(email_sender.email, email_sender.password)
 
-        for recipient_email in recipients_list:
-            message['To'] = recipient_email 
-            # Connect to the SMTP server and send the email
-            server.sendmail(email_sender.email, recipient_email, message.as_string())
+            for recipient_email in recipients_list:
+                message['To'] = recipient_email 
+                # Connect to the SMTP server and send the email
+                server.sendmail(email_sender.email, recipient_email, message.as_string())
+    except Exception as e:
+        print("Error: Couldn't send the email. Check the email credentials")
 
-if __name__ == "__main__":
+def run_daily_email(excel_already_created=False, excel_path="countries.xlsx"):
     """Receive the email configuration from the email_config.json file and sends the email
         it creates the countries.xlsx file form the database in case it gets updated
     """
@@ -72,8 +76,9 @@ if __name__ == "__main__":
 
         dotenv.load_dotenv()
         postgresql_url = os.getenv("POSTGRESQL_URL")
-        countries_df = pd.read_sql_table("countries", postgresql_url)
-        countries_df.to_excel("countries.xlsx", sheet_name="Paises", index=False)
+        if not excel_already_created:
+            countries_df = pd.read_sql_table("countries", postgresql_url)
+            create_excel_file(countries_df, excel_path)
 
         """Receives the email sender credentials from the .env file"""
         email_usr = os.getenv("EMAIL_USR")
@@ -86,7 +91,10 @@ if __name__ == "__main__":
 
         email_sender = EmailSender(email_usr, email_pass, email_server)
 
-        send_email(email_sender, recipient_email, subject, body, "countries.xlsx")
+        send_email(email_sender, recipient_email, subject, body, excel_path)
 
     config_f.close()
+
+if __name__ == "__main__":
+    run_daily_email()
     

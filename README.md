@@ -20,7 +20,7 @@ los países del mundo.
 
 ## Configuración y uso
 
-1.  Asegurarse de tener instalado en el ambiente una base de datos `postgres (PostgreSQL) 14.8` o superior con una base de datos creada
+1.  Asegurarse de tener instalado en el ambiente una base de datos `postgres (PostgreSQL) 14.8` o superior con una base de datos creada (utilizar el mismo nombre en la configuración del `.env` que se menciona mas adelante)
 2.  Asegurarse de tener instalado `Python 3.11.4` o superior junto a la versión de pip correspondiente.<br>Es recomendable generar un _virtual environment_ para aislar las dependencias del proyecto. Esto puede realizarse ejecutando el siguiente comando
 
     ```sh
